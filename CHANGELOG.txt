@@ -1,0 +1,28 @@
+v1.0AWK Graywing USER PATCH - 7/11/2011
+* Two crashbugs fixed by Minecraft forum user Awkisopen
+
+v1.0 Graywing FULL RELEASE - 8/27/2011
+* Added ability to select wich chunks are to be aged
+* Added a WinForms GUI frontend
+* Added perlin filter (nonuniform destruction, more detail)
+* Numerous bugs and crashes fixed
+* Substrate updated 0.7.0 
+
+v0.3 Brawler BETA - 6/18/2011
+* Smoothstone erosion is now supported
+* Nature takes over creations
+* Added config selection (multiple configs included)
+* No more floating ladders, signs, etc.
+* Fluids are now properly updated
+* Speed optimalizations
+* Fixed loads of bugs
+* Added readme file
+
+v0.2 Alca RELEASE - 6/4/2011
+* All variables are now exposed to config.cfg file
+* Fixed chests, furnaces, etc. losing their contents
+* Couple of minor bugfixes
+* Substrate updated to 0.5.2, should work with Minecraft 1.6.6
+
+v0.1 Astral RELEASE - 4/18/2011
+* Initial release
