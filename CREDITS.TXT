@@ -1,0 +1,13 @@
+Teeth of Time would not exist or would be much pain to develop if it weren't of these great people. Thanks to:
+
+Jaquadro for his Substrate Map editing API ( http://www.minecraftforum.net/topic/245996-sdk-substrate-map-editing-library-for-cnet-060/ )
+
+Kuba1920 for his castle world I used to test v0.1 of the tool. ( http://www.minecraftworldmap.com/worlds/2bFTi )
+
+Oldshoes for Broville I tested v0.2 on. ( http://www.minecraftforum.net/topic/21991-super-neato-creation-broville-v9-v10-in-the-works/ )
+
+_Robson for Mace City Generator I tested 0.3 and 1.0 releases on. ( http://www.minecraftforum.net/topic/357201-mace-v120-random-city-generator/page__st__40 )_
+
+Coau14, Angry Lolrus and Arcade909 for testing the release candidates for 1.0
+
+Minecraft Forum community for keeping interest for this project in me and giving me numerous ideas and bug reports.
