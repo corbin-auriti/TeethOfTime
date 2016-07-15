@@ -1,0 +1,23 @@
+Overview
+
+This tutorial covers all you need to know to ruin your (or someone else's) worlds.
+
+Basics
+
+Warning, you must quit Minecraft completely before running Teeth of Time, or all the ageing will be canceled!
+
+To install the program, simply extract the archive into any location you want.
+
+After installing, run the TeethFrontEnd.exe file located in your extraction directory. The following blank screen should appear: [NO IMAGE]
+
+Select a world from the list on the bottom left. After you pick a world, the program will freeze for a while when it's generating the map. After it's done, you should see something like this: [NO IMAGE]
+
+Select your config from the list on bottom right. You can find descriptions of the configs directly in them or in the Readme.txt file in main Teeth of Time directory
+
+Use the scrollbars to navigate around the map. You can click chunks to select or unselect them, selected chunks have a yellow border. It looks like this: [NO IMAGE]
+
+If you want to age your whole world, simply don't select any chunks and click the "Age selected world" button. This is a very slow process though, so if you want to age all buildings in a world, I recommend you to select them manually, so the program will not waste time on untouched natural chunks.
+
+After you are done, hit the "Age selected world" button. A console window will appear, printing various informations about the process. The process itself will take different amount of time depending on the number of selected chunks.
+
+Wait until the window closes. Hooray! The world (or just a few buildings) is now destroyed, feel free to run it in Minecraft.
