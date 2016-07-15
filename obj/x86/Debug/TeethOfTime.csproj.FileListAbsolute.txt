@@ -1,0 +1,12 @@
+E:\Minecraft\App Development\TeethOfTime\obj\x86\Debug\ResolveAssemblyReference.cache
+E:\Minecraft\App Development\TeethOfTime\obj\x86\Debug\TeethOfTime.Properties.Resources.resources
+E:\Minecraft\App Development\TeethOfTime\obj\x86\Debug\GenerateResource.read.1.tlog
+E:\Minecraft\App Development\TeethOfTime\obj\x86\Debug\GenerateResource.write.1.tlog
+E:\Minecraft\App Development\TeethOfTime\bin\Debug\TeethOfTime.exe.config
+E:\Minecraft\App Development\TeethOfTime\bin\Debug\TeethOfTime.exe
+E:\Minecraft\App Development\TeethOfTime\bin\Debug\TeethOfTime.pdb
+E:\Minecraft\App Development\TeethOfTime\obj\x86\Debug\TeethOfTime.exe
+E:\Minecraft\App Development\TeethOfTime\obj\x86\Debug\TeethOfTime.pdb
+E:\Minecraft\App Development\TeethOfTime\bin\Debug\Substrate.dll
+E:\Minecraft\App Development\TeethOfTime\bin\Debug\Ionic.Zlib.dll
+E:\Minecraft\App Development\TeethOfTime\bin\Debug\AForge.Math.dll

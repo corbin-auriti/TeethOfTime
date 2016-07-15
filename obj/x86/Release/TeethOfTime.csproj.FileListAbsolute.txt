@@ -1,0 +1,10 @@
+E:\Minecraft\App Development\TeethOfTime\bin\Release\TeethOfTime.exe.config
+E:\Minecraft\App Development\TeethOfTime\bin\Release\TeethOfTime.exe
+E:\Minecraft\App Development\TeethOfTime\bin\Release\TeethOfTime.pdb
+E:\Minecraft\App Development\TeethOfTime\obj\x86\Release\ResolveAssemblyReference.cache
+E:\Minecraft\App Development\TeethOfTime\obj\x86\Release\TeethOfTime.Properties.Resources.resources
+E:\Minecraft\App Development\TeethOfTime\obj\x86\Release\GenerateResource.read.1.tlog
+E:\Minecraft\App Development\TeethOfTime\obj\x86\Release\GenerateResource.write.1.tlog
+E:\Minecraft\App Development\TeethOfTime\obj\x86\Release\TeethOfTime.exe
+E:\Minecraft\App Development\TeethOfTime\obj\x86\Release\TeethOfTime.pdb
+E:\Minecraft\App Development\TeethOfTime\bin\Release\Ionic.Zlib.dll

@@ -1,0 +1,11 @@
+E:\Minecraft\App Development\TeethOfTime\TeethFrontEnd\bin\Debug\TeethFrontEnd.exe
+E:\Minecraft\App Development\TeethOfTime\TeethFrontEnd\bin\Debug\TeethFrontEnd.pdb
+E:\Minecraft\App Development\TeethOfTime\TeethFrontEnd\bin\Debug\Substrate.dll
+E:\Minecraft\App Development\TeethOfTime\TeethFrontEnd\bin\Debug\Ionic.Zlib.dll
+E:\Minecraft\App Development\TeethOfTime\TeethFrontEnd\obj\x86\Debug\ResolveAssemblyReference.cache
+E:\Minecraft\App Development\TeethOfTime\TeethFrontEnd\obj\x86\Debug\TeethFrontEnd.Main.resources
+E:\Minecraft\App Development\TeethOfTime\TeethFrontEnd\obj\x86\Debug\TeethFrontEnd.Properties.Resources.resources
+E:\Minecraft\App Development\TeethOfTime\TeethFrontEnd\obj\x86\Debug\GenerateResource.read.1.tlog
+E:\Minecraft\App Development\TeethOfTime\TeethFrontEnd\obj\x86\Debug\GenerateResource.write.1.tlog
+E:\Minecraft\App Development\TeethOfTime\TeethFrontEnd\obj\x86\Debug\TeethFrontEnd.exe
+E:\Minecraft\App Development\TeethOfTime\TeethFrontEnd\obj\x86\Debug\TeethFrontEnd.pdb

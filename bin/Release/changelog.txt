@@ -1,0 +1,101 @@
+-== v1.0 Graywing FULL RELEASE 8/27/2011 =--
+
+	* Added ability to select wich chunks are to be aged
+	
+	* Added a WinForms GUI frontend
+	
+	* Added perlin filter (nonuniform destruction, more detail)
+	
+	* New official config (Warfare)
+	
+	* Numerous bugs and crashes fixed
+	
+	* Added icon to the frontend
+	
+	* Substrate updated 0.7.0
+
+	
+v1.0rc4 Roc RELEASE CANDIDATE 4 8/26/2011
+
+	* Fixed many supported-needing blocks not getting destroyed when their supporting block is moved
+
+	* Removed a bunch of debug stuff
+	
+	* Added icon to the frontend
+	
+
+v1.0rc3 Ragnarok RELEASE CANDIDATE 3 8/26/2011
+
+	* Made the parser accept negative integers (fixes crash when selecting chunks with negative coordinates)
+
+	* Fixed zoom and selected chunks list not getting properly reset after picking another map in the list
+	
+	
+v1.0rc2 Romero RELEASE CANDIDATE 2 8/25/2011
+
+	* Fixed two crash bugs
+	
+
+v1.0rc1 Robinson RELEASE CANDIDATE 1 8/25/2011
+	
+	* Numerous bugfixes
+
+	
+v0.31 Brawler BETA - 7/17/2011
+	
+	* Two new config variables, fallSpread and natureKillTo
+	
+	* New official config (Wastelands)
+	
+	* Fixed natureReplace arrays' priority (no more floating blocks)
+	
+	* Rain now stops if natureRepopulate is used, should avoid some crashes
+	
+	* Major readme improvement
+	
+
+v0.3 Brawler BETA - 6/18/2011
+
+	* Smoothstone erosion is now supported
+
+	* Nature takes over creations
+	
+	* Added config selection (multiple configs included)
+	
+	* No more floating ladders, signs, etc.
+	
+	* Fluids are now properly updated
+	
+	* Speed optimalizations
+	
+	* Fixed loads of bugs
+	
+	* Added readme file
+
+	
+v0.21b Alca HOTFIX - 6/4/2011
+	
+	* Substrate updated to 0.5.3, fixes slab and lava lighting
+
+	
+v0.21 Alca RELEASE - 6/4/2011
+
+	* Fixed config not loading properly
+	
+	* Fixed chests, furnaces, etc. losing their contents
+	
+	* Couple of minor bugfixes
+	
+	* Substrate updated to 0.5.2, should work with Minecraft 1.6.6
+	
+	
+v0.2 Alca PRIVATE TESTING - 5/7/2011
+
+	* All variables are now exposed to config.cfg file
+	
+	* Substrate updated to 0.4.1, should improve performance a bit
+
+	
+v0.1 Astral RELEASE - 4/18/2011
+
+    * Initial release
