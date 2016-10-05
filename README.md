@@ -2,6 +2,8 @@
 
 A Minecraft world ageing application created by Minecraft Fourm user "Commander_Keen" on 4/18/2011
 
+Please note this hasn't been updated since 2011, so it will need a fair amount of updating to work with newer version on Minecraft, the last update this had was to make it compatible with the new level formart and blocks in Minecraft version 1.3
+
 Please see original fourm post: http://www.minecraftforum.net/topic/269176-teeth-of-time-ruin-your-world-v10-graywing/
 
 Or archived version here: http://web.archive.org/web/*/http://www.minecraftforum.net/topic/269176-teeth-of-time-ruin-your-world-v10-graywing/
