@@ -32,7 +32,6 @@ namespace TeethFrontEnd
         /// </summary>
         private void InitializeComponent()
         {
-            this.worldBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.configBox = new System.Windows.Forms.ComboBox();
@@ -42,20 +41,14 @@ namespace TeethFrontEnd
             this.zoomInButton = new System.Windows.Forms.Button();
             this.zoomOutButton = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.pbProgress = new System.Windows.Forms.ProgressBar();
             this.mapBox = new System.Windows.Forms.PictureBox();
+            this.btnLoad = new System.Windows.Forms.Button();
+            this.folderBrowser = new System.Windows.Forms.FolderBrowserDialog();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mapBox)).BeginInit();
             this.SuspendLayout();
-            // 
-            // worldBox
-            // 
-            this.worldBox.FormattingEnabled = true;
-            this.worldBox.Location = new System.Drawing.Point(21, 558);
-            this.worldBox.Name = "worldBox";
-            this.worldBox.Size = new System.Drawing.Size(235, 21);
-            this.worldBox.TabIndex = 1;
-            this.worldBox.SelectedIndexChanged += new System.EventHandler(this.worldBox_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -144,36 +137,55 @@ namespace TeethFrontEnd
             // panel1
             // 
             this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.pbProgress);
             this.panel1.Controls.Add(this.mapBox);
             this.panel1.Location = new System.Drawing.Point(21, 21);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(594, 500);
             this.panel1.TabIndex = 7;
             // 
+            // pbProgress
+            // 
+            this.pbProgress.Location = new System.Drawing.Point(3, 3);
+            this.pbProgress.Name = "pbProgress";
+            this.pbProgress.Size = new System.Drawing.Size(585, 21);
+            this.pbProgress.Step = 0;
+            this.pbProgress.TabIndex = 1;
+            // 
             // mapBox
             // 
             this.mapBox.BackColor = System.Drawing.SystemColors.ControlDark;
             this.mapBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.mapBox.Location = new System.Drawing.Point(0, 0);
+            this.mapBox.Location = new System.Drawing.Point(0, 30);
             this.mapBox.Name = "mapBox";
-            this.mapBox.Size = new System.Drawing.Size(594, 500);
+            this.mapBox.Size = new System.Drawing.Size(594, 470);
             this.mapBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.mapBox.TabIndex = 0;
             this.mapBox.TabStop = false;
             this.mapBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mapBox_Click);
+            // 
+            // btnLoad
+            // 
+            this.btnLoad.Location = new System.Drawing.Point(21, 556);
+            this.btnLoad.Name = "btnLoad";
+            this.btnLoad.Size = new System.Drawing.Size(259, 23);
+            this.btnLoad.TabIndex = 8;
+            this.btnLoad.Text = "Load";
+            this.btnLoad.UseVisualStyleBackColor = true;
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(627, 625);
+            this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.runButton);
             this.Controls.Add(this.configBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.worldBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Main";
@@ -189,8 +201,6 @@ namespace TeethFrontEnd
         }
 
         #endregion
-
-        private System.Windows.Forms.ComboBox worldBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox configBox;
@@ -201,6 +211,9 @@ namespace TeethFrontEnd
         private System.Windows.Forms.Label zoomLabel;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.PictureBox mapBox;
+        private Button btnLoad;
+        private FolderBrowserDialog folderBrowser;
+        private ProgressBar pbProgress;
     }
 }
 

@@ -9,3 +9,14 @@ E:\Minecraft\App Development\TeethOfTime\TeethFrontEnd\obj\x86\Debug\GenerateRes
 E:\Minecraft\App Development\TeethOfTime\TeethFrontEnd\obj\x86\Debug\GenerateResource.write.1.tlog
 E:\Minecraft\App Development\TeethOfTime\TeethFrontEnd\obj\x86\Debug\TeethFrontEnd.exe
 E:\Minecraft\App Development\TeethOfTime\TeethFrontEnd\obj\x86\Debug\TeethFrontEnd.pdb
+C:\Users\Skareeg\Documents\GitHubVisualStudio\TeethOfTime\TeethFrontEnd\obj\x86\Debug\TeethFrontEnd.exe
+C:\Users\Skareeg\Documents\GitHubVisualStudio\TeethOfTime\TeethFrontEnd\obj\x86\Debug\TeethFrontEnd.pdb
+C:\Users\Skareeg\Documents\GitHubVisualStudio\TeethOfTime\TeethFrontEnd\obj\x86\Debug\TeethFrontEnd.Main.resources
+C:\Users\Skareeg\Documents\GitHubVisualStudio\TeethOfTime\TeethFrontEnd\obj\x86\Debug\TeethFrontEnd.Properties.Resources.resources
+C:\Users\Skareeg\Documents\GitHubVisualStudio\TeethOfTime\TeethFrontEnd\obj\x86\Debug\TeethFrontEnd.csproj.GenerateResource.Cache
+C:\Users\Skareeg\Documents\GitHubVisualStudio\TeethOfTime\ToT\TeethFrontEnd.exe
+C:\Users\Skareeg\Documents\GitHubVisualStudio\TeethOfTime\ToT\TeethFrontEnd.pdb
+C:\Users\Skareeg\Documents\GitHubVisualStudio\TeethOfTime\TeethFrontEnd\TeethFrontEnd.exe
+C:\Users\Skareeg\Documents\GitHubVisualStudio\TeethOfTime\TeethFrontEnd\TeethFrontEnd.pdb
+C:\Users\Skareeg\Documents\GitHubVisualStudio\TeethOfTime\TeethFrontEnd\Substrate.dll
+C:\Users\Skareeg\Documents\GitHubVisualStudio\TeethOfTime\TeethFrontEnd\obj\x86\Debug\TeethFrontEnd.csprojResolveAssemblyReference.cache

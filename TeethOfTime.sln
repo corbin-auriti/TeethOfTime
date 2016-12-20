@@ -1,7 +1,12 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C# Express 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeethFrontEnd", "TeethFrontEnd\TeethFrontEnd.csproj", "{DEE82BAF-6379-4013-96D8-2718CA67C34D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D293BAC7-03CE-428E-A86F-9B27EABCCACF} = {D293BAC7-03CE-428E-A86F-9B27EABCCACF}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeethOfTime", "TeethOfTime.csproj", "{D293BAC7-03CE-428E-A86F-9B27EABCCACF}"
 EndProject
