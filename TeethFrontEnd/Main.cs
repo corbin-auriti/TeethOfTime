@@ -23,42 +23,24 @@ namespace TeethFrontEnd
         }
 
         public bool aDisplayReady = false;
-        public BetaWorld aWorld;
-        public BetaChunkManager aChunkMan;
+        public NbtWorld aWorld;
+        public RegionChunkManager aChunkMan;
         public int[] aMinXZ = { 0, 0 };
         public Graphics aMapSurface;
         public System.Drawing.Drawing2D.GraphicsState aMapSave;
         public SolidBrush aChunkBrush = new SolidBrush(Color.Gold);
         public Pen aPen = new Pen(Color.Gold, 2);
         public List<ChunkRef> aSelectedChunks = new List<ChunkRef>();
+        public string selectedWorldPath = "";
 
         public void Run()
         {
-            // Load worlds into the world selection box
+            // Load configs into the world selection box
 
             List<string> names = new List<string>();
             List<string> paths = new List<string>();
 
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\.minecraft\saves\";
-
-            foreach (string dir in System.IO.Directory.GetDirectories(path))
-            {
-                names.Add(dir.Substring(path.Length));
-                paths.Add(dir);
-            }
-
-            string[] pathsA = paths.ToArray();
-
-            var dict = names.Select((item, index) => new KeyValuePair<string, string>(item, pathsA[index]));
-
-            worldBox.DisplayMember = "Key";
-            worldBox.Items.AddRange(dict.OfType<object>().ToArray());
-
-            // Load configs into the world selection box
-
-            names.Clear();
-
-            path = System.IO.Directory.GetCurrentDirectory() + @"\configs\";
+            string path = Environment.CurrentDirectory + @"\configs\";
 
             foreach (string conf in System.IO.Directory.GetFiles(path, "*.cfg"))
             {
@@ -99,12 +81,12 @@ namespace TeethFrontEnd
 
         private void runButton_Click(object sender, EventArgs e)
         {
-            if (worldBox.SelectedIndex != -1)
+            if (selectedWorldPath != "")
             {
                 string ToTPath = System.IO.Directory.GetCurrentDirectory() + @"\TeethOfTime.exe";
 
                 char quote = '"';
-                string worldPath = ((KeyValuePair<string, string>)worldBox.SelectedItem).Value;
+                string worldPath = selectedWorldPath;
                 worldPath = quote + worldPath + quote;
 
                 int[,] selectedChunks = chunkArrayToIntArray(aSelectedChunks);
@@ -122,41 +104,6 @@ namespace TeethFrontEnd
 
                 Process.Start(TeethInfo);
             }
-        }
-
-        private void worldBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            aDisplayReady = false;
-
-            string worldPath = ((KeyValuePair<string, string>)worldBox.SelectedItem).Value;
-            string worldName = ((KeyValuePair<string, string>)worldBox.SelectedItem).Key;
-
-            aSelectedChunks.Clear();
-            zoomLabel.Text = "1";
-
-            BetaWorld world = BetaWorld.Open(worldPath);
-            BetaChunkManager chunkMan = world.GetChunkManager();
-
-            aWorld = world;
-            aChunkMan = chunkMan;
-
-            Bitmap map = GenerateMap(world, chunkMan);
-
-            mapBox.Image = map;
-            mapBox.Width = map.Width;
-            mapBox.Height = map.Height;
-
-            handleGraphics();
-
-            /*string MapDirPath = System.IO.Directory.GetCurrentDirectory() + @"\MapData\";
-            if (!Directory.Exists(MapDirPath))
-            {
-                Directory.CreateDirectory(MapDirPath);
-            }
-
-            map.Save(MapDirPath + worldName + ".png");*/
-
-            aDisplayReady = true;
         }
 
         private void zoomInButton_Click(object sender, EventArgs e)
@@ -183,7 +130,7 @@ namespace TeethFrontEnd
             zoomLabel.Text = zoom.ToString();
         }
 
-        public Bitmap GenerateMap(BetaWorld world, BetaChunkManager chunkMan)
+        public Bitmap GenerateMap(NbtWorld world, RegionChunkManager chunkMan)
         {
             int[,] colors = { { 0, 255, 0, 255 }, { 1, 128, 128, 128 }, { 2, 64, 192, 64 }, { 3, 128, 48, 0 }, { 4, 64, 64, 64 }, { 5, 255, 128, 64 }, { 6, 0, 192, 0 }, { 7, 32, 32, 32 }, { 8, 16, 16, 128 }, { 9, 16, 16, 128 }, { 10, 255, 0, 0 }, { 11, 255, 0, 0 }, { 12, 255, 255, 192 }, { 13, 156, 128, 128 }, { 14, 192, 192, 128 }, { 15, 192, 128, 96 }, { 16, 48, 48, 32 }, { 17, 192, 96, 48 }, { 18, 0, 128, 0 }, { 19, 255, 255, 0 }, { 20, 224, 224, 224 }, { 21, 128, 128, 192 }, { 22, 64, 64, 255 }, { 23, 64, 64, 64 }, { 24, 128, 128, 96 }, { 25, 192, 96, 48 }, { 26, 255, 128, 128 }, { 27, 224, 128, 128 }, { 28, 224, 128, 128 }, { 29, 128, 192, 48 }, { 30, 224, 224, 224 }, { 31, 96, 32, 0 }, { 32, 128, 64, 32 }, { 33, 255, 192, 96 }, { 34, 255, 192, 96 }, { 35, 224, 224, 224 }, { 36, 0, 0, 0 }, { 37, 255, 255, 0 }, { 38, 255, 48, 48 }, { 39, 192, 128, 96 }, { 40, 255, 192, 96 }, { 41, 255, 255, 64 }, { 42, 192, 192, 192 }, { 43, 140, 140, 140 }, { 44, 150, 150, 150 }, { 45, 192, 64, 64 }, { 46, 128, 0, 0 }, { 47, 255, 128, 64 }, { 48, 64, 128, 64 }, { 49, 16, 16, 24 }, { 50, 255, 255, 0 }, { 51, 255, 224, 0 }, { 52, 96, 128, 192 }, { 53, 255, 192, 96 }, { 54, 224, 128, 64 }, { 55, 128, 0, 0 }, { 56, 128, 138, 92 }, { 57, 128, 192, 255 }, { 58, 192, 96, 48 }, { 59, 192, 255, 0 }, { 60, 192, 96, 0 }, { 61, 96, 96, 96 }, { 62, 96, 96, 96 }, { 63, 255, 128, 64 }, { 64, 255, 128, 64 }, { 65, 255, 128, 64 }, { 66, 224, 224, 192 }, { 67, 78, 78, 78 }, { 68, 255, 128, 64 }, { 69, 128, 96, 64 }, { 70, 133, 133, 133 }, { 71, 192, 192, 192 }, { 72, 255, 192, 128 }, { 73, 224, 128, 128 }, { 74, 224, 128, 128 }, { 75, 255, 64, 64 }, { 76, 255, 64, 64 }, { 77, 255, 64, 64 }, { 78, 255, 255, 255 }, { 79, 0, 192, 224 }, { 80, 255, 255, 255 }, { 81, 0, 192, 0 }, { 82, 170, 160, 170 }, { 83, 96, 255, 32 }, { 84, 192, 96, 48 }, { 85, 255, 128, 64 }, { 86, 255, 128, 0 }, { 87, 128, 24, 48 }, { 88, 128, 96, 64 }, { 89, 255, 224, 96 }, { 90, 128, 0, 255 }, { 91, 255, 128, 0 }, { 92, 255, 192, 192 }, { 93, 255, 96, 96 }, { 94, 255, 96, 96 }, { 95, 0, 0, 0 }, { 96, 255, 128, 64 } };
 
@@ -210,6 +157,9 @@ namespace TeethFrontEnd
             int[] pixelpos = { 0, 0 };
             Color color;
 
+            long chunkCount = chunkMan.Count();
+            long chunkCurrent = 0;
+
             foreach (ChunkRef chunk in chunkMan)
             {
                 for (int x = 0; x < 16; x++)
@@ -217,22 +167,30 @@ namespace TeethFrontEnd
                     for (int z = 0; z < 16; z++)
                     {
                         y = chunk.Blocks.GetHeight(x, z);
-                        block = chunk.Blocks.GetID(x, y - 1, z);
 
-                        int blockColor = block;
-
-                        if (blockColor < colors.GetUpperBound(0)+1)
+                        if (y > 0 && y < 256)
                         {
-                            color = color = Color.FromArgb(colors[blockColor, 1], colors[blockColor, 2], colors[blockColor, 3]);
+                            block = chunk.Blocks.GetID(x, y - 1, z);
+
+                            int blockColor = block;
+
+                            if (blockColor < colors.GetUpperBound(0) + 1)
+                            {
+                                color = color = Color.FromArgb(colors[blockColor, 1], colors[blockColor, 2], colors[blockColor, 3]);
+                            }
+                            else
+                            {
+                                color = color = Color.FromArgb(255, 0, 255);
+                            }
+
+                            if (x == 0 || z == 0)
+                            {
+                                color = Color.FromArgb(color.R / 2, color.G / 2, color.B / 2);
+                            }
                         }
                         else
                         {
-                            color = color = Color.FromArgb(255, 0, 255);
-                        }
-
-                        if (x == 0 || z == 0)
-                        {
-                            color = Color.FromArgb(color.R / 2, color.G / 2, color.B / 2);
+                            color = Color.Black;
                         }
 
                         pixelpos[0] = Math.Abs(minXZ[0]) + (chunk.X * 16) + x;
@@ -241,7 +199,12 @@ namespace TeethFrontEnd
                         map.SetPixel(pixelpos[0], pixelpos[1], color);
                     }
                 }
+                chunkCurrent++;
+                pbProgress.Value = (int)(100.0 * ((double)chunkCurrent / (double)chunkCount));
+                pbProgress.PerformStep();
             }
+            pbProgress.Value = 0;
+            pbProgress.PerformStep();
 
             return map;
         }
@@ -279,10 +242,19 @@ namespace TeethFrontEnd
             }
         }
 
+        delegate void resetMapSurfaceDel();
+
         private void resetMapSurface()
         {
-            mapBox.Enabled = false;
-            mapBox.Enabled = true;
+            if (!InvokeRequired)
+            {
+                mapBox.Enabled = false;
+                mapBox.Enabled = true;
+            }
+            else
+            {
+                Invoke(new resetMapSurfaceDel(resetMapSurface));
+            }
         }
 
         public ChunkRef grabChunk(int X, int Z)
@@ -356,6 +328,45 @@ namespace TeethFrontEnd
             result += "};";
 
             return result;
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            if(folderBrowser.ShowDialog() == DialogResult.OK)
+            {
+                selectedWorldPath = folderBrowser.SelectedPath;
+                aDisplayReady = false;
+
+                string worldPath = selectedWorldPath;
+
+                aSelectedChunks.Clear();
+                zoomLabel.Text = "1";
+
+                NbtWorld world = NbtWorld.Open(worldPath);
+                string worldName = world.Level.LevelName;
+                RegionChunkManager chunkMan = (RegionChunkManager)world.GetChunkManager(0);
+
+                aWorld = world;
+                aChunkMan = chunkMan;
+
+                Bitmap map = GenerateMap(world, chunkMan);
+
+                mapBox.Image = map;
+                mapBox.Width = map.Width;
+                mapBox.Height = map.Height;
+
+                handleGraphics();
+
+                /*string MapDirPath = System.IO.Directory.GetCurrentDirectory() + @"\MapData\";
+                if (!Directory.Exists(MapDirPath))
+                {
+                    Directory.CreateDirectory(MapDirPath);
+                }
+
+                map.Save(MapDirPath + worldName + ".png");*/
+
+                aDisplayReady = true;
+            }
         }
     }
 }

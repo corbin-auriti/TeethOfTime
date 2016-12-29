@@ -345,17 +345,16 @@ namespace TeethOfTime
             Console.WriteLine();
 
             // Open the world
-            BetaWorld world = BetaWorld.Open(worldPath);
+            NbtWorld world = NbtWorld.Open(worldPath);
 
-            BetaChunkManager chunkMan = world.GetChunkManager();
+            RegionChunkManager chunkMan = (RegionChunkManager)world.GetChunkManager(0);
 
             int[] minXZ = { 0, 0 };
             int[] maxXZ = { 0, 0 };
 
             int xdim = 16;
             int zdim = 16;
-
-            int affectedChunks = 0;
+            
             int reportedChunks = 0;
 
             Console.WriteLine("Selecting chunks to be aged");
@@ -438,29 +437,35 @@ namespace TeethOfTime
                 world.Save();
             }
 
-            reportedChunks = 0;
+            long chunkCount = chunkMan.Count();
+            long chunkCurrent = 0;
 
             // Main ageing loop
             if (customChunks)
             {
                 foreach (ChunkRef chunk in selectedChunks)
                 {
-                    affectedChunks++;
-
-                    if (globalRelight)
+                    try
                     {
-                        chunk.Blocks.AutoLight = false;
+                        if (globalRelight)
+                        {
+                            chunk.Blocks.AutoLight = false;
+                        }
+
+                        AgeChunk(chunk, chunkMan, perlinMask, perlinResInt, minXZ);
+
+                        chunkMan.Save();
+
+                        chunkCurrent++;
+                        if (chunkCurrent % 10 == 0 || chunkCurrent == chunkCount)
+                        {
+                            Console.WriteLine("Ageing: " + (((double)chunkCurrent / (double)chunkCount) * 100.0) + "%");
+                        }
                     }
-
-                    AgeChunk(chunk, chunkMan, perlinMask, perlinResInt, minXZ);
-
-                    chunkMan.Save();
-
-                    if (affectedChunks > 10)
+                    catch (System.Exception ex)
                     {
-                        reportedChunks = reportedChunks + 10;
-                        affectedChunks = affectedChunks - 10;
-                        Console.WriteLine(reportedChunks + " chunks aged");
+                        Console.WriteLine("Error ageing chunk at <" + chunk.X + "," + chunk.Z + ">");
+                        Console.WriteLine(ex.Message);
                     }
                 }
             }
@@ -468,29 +473,34 @@ namespace TeethOfTime
             {
                 foreach (ChunkRef chunk in chunkMan)
                 {
-                    affectedChunks++;
-
-                    if (globalRelight)
+                    try
                     {
-                        chunk.Blocks.AutoLight = false;
+                        if (globalRelight)
+                        {
+                            chunk.Blocks.AutoLight = false;
+                        }
+
+                        AgeChunk(chunk, chunkMan, perlinMask, perlinResInt, minXZ);
+
+                        chunkMan.Save();
+
+                        chunkCurrent++;
+                        if (chunkCurrent % 10 == 0 || chunkCurrent == chunkCount)
+                        {
+                            Console.WriteLine("Ageing: " + (((double)chunkCurrent / (double)chunkCount) * 100.0) + "%");
+                        }
                     }
-
-                    AgeChunk(chunk, chunkMan, perlinMask, perlinResInt, minXZ);
-
-                    chunkMan.Save();
-
-                    if (affectedChunks > 10)
+                    catch (System.Exception ex)
                     {
-                        reportedChunks = reportedChunks + 10;
-                        affectedChunks = affectedChunks - 10;
-                        Console.WriteLine(reportedChunks + " chunks aged");
+                        Console.WriteLine("Error ageing chunk at <" + chunk.X + "," + chunk.Z + ">");
+                        Console.WriteLine(ex.Message);
                     }
                 }
             }
-            Console.WriteLine((reportedChunks + affectedChunks) + " chunks aged");
 
-            affectedChunks = 0;
-            reportedChunks = 0;
+            Console.WriteLine(chunkCurrent + " chunks aged");
+
+            chunkCurrent = 0;
 
             Console.WriteLine();
             Console.WriteLine("Running cleaning loop");
@@ -500,34 +510,39 @@ namespace TeethOfTime
             {
                 foreach (ChunkRef chunk in selectedChunks)
                 {
-                    affectedChunks++;
-
-                    if (natureRepopulation)
+                    try
                     {
-                        chunk.IsTerrainPopulated = false;
+                        if (natureRepopulation)
+                        {
+                            chunk.IsTerrainPopulated = false;
+                        }
+
+                        CleanChunk(chunk, chunkMan, perlinMask, perlinResInt, minXZ);
+
+                        chunk.Blocks.RebuildFluid();
+
+                        if (globalRelight)
+                        {
+                            chunk.Blocks.RebuildHeightMap();
+                            chunk.Blocks.ResetBlockLight();
+                            chunk.Blocks.ResetSkyLight();
+
+                            chunk.Blocks.RebuildBlockLight();
+                            chunk.Blocks.RebuildSkyLight();
+                        }
+
+                        chunkMan.Save();
+
+                        chunkCurrent++;
+                        if (chunkCurrent % 50 == 0 || chunkCurrent == chunkCount)
+                        {
+                            Console.WriteLine("Cleaning: " + (((double)chunkCurrent / (double)chunkCount) * 100.0) + "%");
+                        }
                     }
-
-                    CleanChunk(chunk, chunkMan, perlinMask, perlinResInt, minXZ);
-
-                    chunk.Blocks.RebuildFluid();
-
-                    if (globalRelight)
+                    catch (System.Exception ex)
                     {
-                        chunk.Blocks.RebuildHeightMap();
-                        chunk.Blocks.ResetBlockLight();
-                        chunk.Blocks.ResetSkyLight();
-
-                        chunk.Blocks.RebuildBlockLight();
-                        chunk.Blocks.RebuildSkyLight();
-                    }
-
-                    chunkMan.Save();
-
-                    if (affectedChunks > 50)
-                    {
-                        reportedChunks = reportedChunks + 50;
-                        affectedChunks = affectedChunks - 50;
-                        Console.WriteLine(reportedChunks + " chunks cleaned");
+                        Console.WriteLine("Error cleaning chunk at <" + chunk.X + "," + chunk.Z + ">");
+                        Console.WriteLine(ex.Message);
                     }
                 }
             }
@@ -535,43 +550,48 @@ namespace TeethOfTime
             {
                 foreach (ChunkRef chunk in chunkMan)
                 {
-                    affectedChunks++;
-
-                    if (natureRepopulation)
+                    try
                     {
-                        chunk.IsTerrainPopulated = false;
+                        if (natureRepopulation)
+                        {
+                            chunk.IsTerrainPopulated = false;
+                        }
+
+                        CleanChunk(chunk, chunkMan, perlinMask, perlinResInt, minXZ);
+
+                        chunk.Blocks.RebuildFluid();
+
+                        if (globalRelight)
+                        {
+                            chunk.Blocks.RebuildHeightMap();
+                            chunk.Blocks.ResetBlockLight();
+                            chunk.Blocks.ResetSkyLight();
+
+                            chunk.Blocks.RebuildBlockLight();
+                            chunk.Blocks.RebuildSkyLight();
+                        }
+
+                        chunkMan.Save();
+
+                        chunkCurrent++;
+                        if (chunkCurrent % 50 == 0 || chunkCurrent == chunkCount)
+                        {
+                            Console.WriteLine("Cleaning: " + (((double)chunkCurrent / (double)chunkCount) * 100.0) + "%");
+                        }
                     }
-
-                    CleanChunk(chunk, chunkMan, perlinMask, perlinResInt, minXZ);
-
-                    chunk.Blocks.RebuildFluid();
-
-                    if (globalRelight)
+                    catch (System.Exception ex)
                     {
-                        chunk.Blocks.RebuildHeightMap();
-                        chunk.Blocks.ResetBlockLight();
-                        chunk.Blocks.ResetSkyLight();
-
-                        chunk.Blocks.RebuildBlockLight();
-                        chunk.Blocks.RebuildSkyLight();
-                    }
-
-                    chunkMan.Save();
-
-                    if (affectedChunks > 50)
-                    {
-                        reportedChunks = reportedChunks + 50;
-                        affectedChunks = affectedChunks - 50;
-                        Console.WriteLine(reportedChunks + " chunks cleaned");
+                        Console.WriteLine("Error cleaning chunk at <" + chunk.X + "," + chunk.Z + ">");
+                        Console.WriteLine(ex.Message);
                     }
                 }
             }
 
-            Console.WriteLine((reportedChunks + affectedChunks) + " chunks cleaned");
+            Console.WriteLine(chunkCurrent + " chunks cleaned");
         }
 
         // Function for falling and toppling blocks
-        public void AgeChunk(ChunkRef chunk, BetaChunkManager chunkMan, Bitmap perlinMask, int perlinResolution, int[] minXZ)
+        public void AgeChunk(ChunkRef chunk, RegionChunkManager chunkMan, Bitmap perlinMask, int perlinResolution, int[] minXZ)
         {
             int xdim = chunk.Blocks.XDim;
             int ydim = chunk.Blocks.YDim;
@@ -605,334 +625,345 @@ namespace TeethOfTime
                 {
                     for (int z = 0; z < zdim; z++)
                     {
-                        // Reset the algorithm limiter
-                        int bottomY = ydim - 2;
-
-                        // Get the perlin mask multiplier
-                        Color perlinCol = perlinMask.GetPixel(Math.Abs(minXZ[0] / perlinResolution) + (chunk.X * 16 / perlinResolution) + (x / perlinResolution), Math.Abs(minXZ[1] / perlinResolution) + (chunk.Z * 16 / perlinResolution) + (z / perlinResolution));
-                        double perlinMulti = (double)perlinCol.R / 255f;
-
-                        int oldBlock;
-
-                        if (stoneAdvanced && pass <= stonePassN) // Stone displacement - advanced method
+                        if (chunk.Blocks.GetHeight(x, z) > 0 && chunk.Blocks.GetHeight(x, z) < 256)
                         {
-                            for (int y = chunk.Blocks.GetHeight(x, z); y > 1; y--)
+                            // Reset the algorithm limiter
+                            int bottomY = ydim - 2;
+
+                            // Get the perlin mask multiplier
+                            int px = Math.Abs(minXZ[0] / perlinResolution) + (chunk.X * 16 / perlinResolution) + (x / perlinResolution);
+                            int py = Math.Abs(minXZ[1] / perlinResolution) + (chunk.Z * 16 / perlinResolution) + (z / perlinResolution);
+                            px = Math.Min(Math.Max(px, 0), perlinMask.Width - 1);
+                            py = Math.Min(Math.Max(py, 0), perlinMask.Height - 1);
+                            Color perlinCol = perlinMask.GetPixel(px, py);
+                            double perlinMulti = (double)perlinCol.R / 255f;
+
+                            int oldBlock;
+
+                            if (stoneAdvanced && pass <= stonePassN) // Stone displacement - advanced method
                             {
-                                bottomY = y;
-
-                                // Get the checked block's ID
-                                oldBlock = chunk.Blocks.GetID(x, y, z);
-
-                                if (oldBlock == 2 || oldBlock == 3 || oldBlock == 12 || oldBlock == 13) // Stop if encountered grass or dirt, should stop random underground space
-                                    break;
-
-                                if (oldBlock == 1)
+                                for (int y = chunk.Blocks.GetHeight(x, z); y > 1; y--)
                                 {
-                                    airPos = FindFreeLight(chunk, chunkMan, x, y, z);
+                                    bottomY = y;
 
-                                    // Set the most bottom stone to be eroded, stop on grass
-                                    if (((airPos[0] == -9999) && (airPos[1] == -9999)))
-                                    {
+                                    // Get the checked block's ID
+                                    oldBlock = chunk.Blocks.GetID(x, y, z);
+
+                                    if (oldBlock == 2 || oldBlock == 3 || oldBlock == 12 || oldBlock == 13) // Stop if encountered grass or dirt, should stop random underground space
                                         break;
-                                    }
-                                }
-                            }
 
-                            for (int y = bottomY; y < ydim - 2; y++)
-                            {
-                                // Don't even try if out of limits
-                                if (y >= ydim - 2 || y <= 1)
-                                {
-                                    continue;
-                                }
-
-                                // Get the checked block's ID
-                                oldBlock = chunk.Blocks.GetID(x, y, z);
-
-                                // Probability test
-                                c = rand.NextDouble();
-                                if (c < stoneFallChanceMin + (stoneFallChanceMax * perlinMulti))
-                                {
                                     if (oldBlock == 1)
                                     {
-                                        // Random chance to destroy the block in fall
-                                        c = rand.NextDouble();
-                                        if ((c < fallKillChanceMin + (fallKillChanceMax * perlinMulti)) && pass == 1)
-                                        {
-                                            // Kill the initial block
-                                            chunk.Blocks.SetID(x, y, z, 0);
-                                            continue;
-                                        }
-
-                                        airPos = FindFreeAir(chunk, chunkMan, x, y, z);
-
-                                        // Skip to another column if we don't see light anymore
-                                        if ((airPos[0] == -9999) && (airPos[1] == -9999))
-                                        {
-                                            continue;
-                                        }
-
-                                        int xf = x;
-                                        int zf = z;
-
-                                        ChunkRef tchunk = chunk;
-
-                                        // Random chance to topple
-                                        c = rand.NextDouble();
-                                        if ((c < sidewaysFallChanceMin + (sidewaysFallChanceMax * perlinMulti)) && pass == 1)
-                                        {
-                                            xf = airPos[0];
-                                            zf = airPos[1];
-
-                                            if (((airPos[2] != chunk.X) || (airPos[3] != chunk.Z)) && ((airPos[2] != -999) && (airPos[3] != -999)))
-                                            {
-                                                tchunk = chunkMan.GetChunkRef(airPos[2], airPos[3]);
-                                            }
-                                        }
-
-                                        // Kill the initial block
-                                        chunk.Blocks.SetID(x, y, z, 0);
-
-                                        for (int yf = y; yf > 1; yf--)
-                                        {
-                                            // Incoming!
-                                            int destBlock = tchunk.Blocks.GetID(xf, yf - 1, zf);
-
-                                            if (destBlock == 0 || fallThroughBlock.Contains(destBlock))
-                                            {
-                                                continue;
-                                            }
-
-                                            // Smash weak blocks in the way
-                                            if (smashBlock.Contains(destBlock))
-                                            {
-                                                tchunk.Blocks.SetID(xf, yf - 1, zf, 0);
-                                                continue;
-                                            }
-
-                                            tchunk.Blocks.SetID(xf, yf, zf, 1);
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else // Stone displacement - simple method
-                        {
-                            for (int y = chunk.Blocks.GetHeight(x, z); y > 1; y--)
-                            {
-                                // Don't even try if out of limits
-                                if (y >= ydim - 2 || y <= 1)
-                                {
-                                    continue;
-                                }
-
-                                // Get the checked block's ID
-                                oldBlock = chunk.Blocks.GetID(x, y, z);
-
-                                if (oldBlock == 2 || oldBlock == 3) // Stop if encountered grass or dirt, should stop random underground space
-                                    break;
-
-                                if (oldBlock == 1)
-                                {
-                                    // Probability test
-                                    c = rand.NextDouble();
-                                    if (c < stoneFallChanceMin + (stoneFallChanceMax * perlinMulti))
-                                    {
-                                        // Random chance to destroy the block in fall
-                                        c = rand.NextDouble();
-
-                                        if ((c < stoneFallKillChanceMin + (stoneFallKillChanceMax * perlinMulti)) && pass == 1)
-                                        {
-                                            // Kill the initial block
-                                            chunk.Blocks.SetID(x, y, z, 0);
-                                            continue;
-                                        }
-
                                         airPos = FindFreeLight(chunk, chunkMan, x, y, z);
 
-                                        // Skip to another column if we don't see light anymore
-                                        if ((airPos[0] == -9999) && (airPos[1] == -9999))
+                                        // Set the most bottom stone to be eroded, stop on grass
+                                        if (((airPos[0] == -9999) && (airPos[1] == -9999)))
                                         {
-                                            break;
-                                        }
-
-                                        int xf = x;
-                                        int yf = y;
-                                        int zf = z;
-
-                                        ChunkRef tchunk = chunk;
-
-                                        // Random chance to topple
-                                        c = rand.NextDouble();
-                                        if ((c < stoneSidewaysFallChanceMin + (stoneSidewaysFallChanceMin * perlinMulti)) && pass == 1)
-                                        {
-                                            xf = airPos[0];
-                                            zf = airPos[1];
-                                            yf = airPos[2];
-
-                                            if (((airPos[3] != chunk.X) || (airPos[4] != chunk.Z)) && ((airPos[3] != -999) && (airPos[4] != -999)))
-                                            {
-                                                tchunk = chunkMan.GetChunkRef(airPos[3], airPos[4]);
-                                            }
-                                        }
-
-                                        // Kill the initial block
-                                        chunk.Blocks.SetID(x, y, z, 0);
-
-                                        for (yf = y; yf > 1; yf--)
-                                        {
-                                            // Incoming!
-                                            int destBlock = tchunk.Blocks.GetID(xf, yf - 1, zf);
-
-                                            if (destBlock == 0 || fallThroughBlock.Contains(destBlock))
-                                            {
-                                                continue;
-                                            }
-
-                                            // Smash weak blocks in the way
-                                            if (smashBlock.Contains(destBlock))
-                                            {
-                                                tchunk.Blocks.SetID(xf, yf - 1, zf, 0);
-                                                continue;
-                                            }
-
-                                            tchunk.Blocks.SetID(xf, yf, zf, 1);
                                             break;
                                         }
                                     }
                                 }
-                            }
-                        }
 
-                        for (int y = 1; y < ydim - 2; y++) // Manmade blocks displacement
-                        {
-                            // Get the checked block's ID
-                            oldBlock = chunk.Blocks.GetID(x, y, z);
-
-                            xp = x;
-                            yp = y;
-                            zp = z;
-
-                            // Try to look
-                            if (pass == 1)
-                            {
-                                // Loop through all entries in the mutateBlock array
-                                for (int i = 0; i < mutateBlock.GetUpperBound(0); i++)
+                                for (int y = bottomY; y < ydim - 2; y++)
                                 {
-                                    if (oldBlock == 0)
-                                    {
-                                        break;
-                                    }
-
-                                    // If the checked block is not the what we want, jump to the next mutateBlock entry
-                                    if (oldBlock != mutateBlock[i, 0])
+                                    // Don't even try if out of limits
+                                    if (y >= ydim - 2 || y <= 1)
                                     {
                                         continue;
                                     }
 
-                                    // Have a random chance of letting the block live
-                                    float pMin = (mutateBlock[i, 2]) / 100f;
-                                    float pMax = (mutateBlock[i, 3]) / 100f;
+                                    // Get the checked block's ID
+                                    oldBlock = chunk.Blocks.GetID(x, y, z);
 
+                                    // Probability test
                                     c = rand.NextDouble();
-                                    if (c > pMin + (pMax * perlinMulti))
+                                    if (c < stoneFallChanceMin + (stoneFallChanceMax * perlinMulti))
                                     {
-                                        break;
+                                        if (oldBlock == 1)
+                                        {
+                                            // Random chance to destroy the block in fall
+                                            c = rand.NextDouble();
+                                            if ((c < fallKillChanceMin + (fallKillChanceMax * perlinMulti)) && pass == 1)
+                                            {
+                                                // Kill the initial block
+                                                chunk.Blocks.SetID(x, y, z, 0);
+                                                continue;
+                                            }
+
+                                            airPos = FindFreeAir(chunk, chunkMan, x, y, z);
+
+                                            // Skip to another column if we don't see light anymore
+                                            if ((airPos[0] == -9999) && (airPos[1] == -9999))
+                                            {
+                                                continue;
+                                            }
+
+                                            int xf = x;
+                                            int zf = z;
+
+                                            ChunkRef tchunk = chunk;
+
+                                            // Random chance to topple
+                                            c = rand.NextDouble();
+                                            if ((c < sidewaysFallChanceMin + (sidewaysFallChanceMax * perlinMulti)) && pass == 1)
+                                            {
+                                                xf = airPos[0];
+                                                zf = airPos[1];
+
+                                                if (((airPos[2] != chunk.X) || (airPos[3] != chunk.Z)) && ((airPos[2] != -999) && (airPos[3] != -999)))
+                                                {
+                                                    tchunk = chunkMan.GetChunkRef(airPos[2], airPos[3]);
+                                                }
+                                            }
+
+                                            // Kill the initial block
+                                            chunk.Blocks.SetID(x, y, z, 0);
+
+                                            for (int yf = y; yf > 1; yf--)
+                                            {
+                                                // Incoming!
+                                                int destBlock = tchunk.Blocks.GetID(xf, yf - 1, zf);
+
+                                                if (destBlock == 0 || fallThroughBlock.Contains(destBlock))
+                                                {
+                                                    continue;
+                                                }
+
+                                                // Smash weak blocks in the way
+                                                if (smashBlock.Contains(destBlock))
+                                                {
+                                                    tchunk.Blocks.SetID(xf, yf - 1, zf, 0);
+                                                    continue;
+                                                }
+
+                                                tchunk.Blocks.SetID(xf, yf, zf, 1);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else // Stone displacement - simple method
+                            {
+                                for (int y = chunk.Blocks.GetHeight(x, z); y > 1; y--)
+                                {
+                                    // Don't even try if out of limits
+                                    if (y >= ydim - 2 || y <= 1)
+                                    {
+                                        continue;
                                     }
 
-                                    chunk.Blocks.SetID(x, y, z, mutateBlock[i, 1]);
-                                    oldBlock = mutateBlock[i, 1];
-                                    break;
+                                    // Get the checked block's ID
+                                    oldBlock = chunk.Blocks.GetID(x, y, z);
+
+                                    if (oldBlock == 2 || oldBlock == 3) // Stop if encountered grass or dirt, should stop random underground space
+                                        break;
+
+                                    if (oldBlock == 1)
+                                    {
+                                        // Probability test
+                                        c = rand.NextDouble();
+                                        if (c < stoneFallChanceMin + (stoneFallChanceMax * perlinMulti))
+                                        {
+                                            // Random chance to destroy the block in fall
+                                            c = rand.NextDouble();
+
+                                            if ((c < stoneFallKillChanceMin + (stoneFallKillChanceMax * perlinMulti)) && pass == 1)
+                                            {
+                                                // Kill the initial block
+                                                chunk.Blocks.SetID(x, y, z, 0);
+                                                continue;
+                                            }
+
+                                            airPos = FindFreeLight(chunk, chunkMan, x, y, z);
+
+                                            // Skip to another column if we don't see light anymore
+                                            if ((airPos[0] == -9999) && (airPos[1] == -9999))
+                                            {
+                                                break;
+                                            }
+
+                                            int xf = x;
+                                            int yf = y;
+                                            int zf = z;
+
+                                            ChunkRef tchunk = chunk;
+
+                                            // Random chance to topple
+                                            c = rand.NextDouble();
+                                            if ((c < stoneSidewaysFallChanceMin + (stoneSidewaysFallChanceMin * perlinMulti)) && pass == 1)
+                                            {
+                                                xf = airPos[0];
+                                                zf = airPos[1];
+                                                yf = airPos[2];
+
+                                                if (((airPos[3] != chunk.X) || (airPos[4] != chunk.Z)) && ((airPos[3] != -999) && (airPos[4] != -999)))
+                                                {
+                                                    tchunk = chunkMan.GetChunkRef(airPos[3], airPos[4]);
+                                                }
+                                            }
+
+                                            // Kill the initial block
+                                            chunk.Blocks.SetID(x, y, z, 0);
+
+                                            for (yf = y; yf > 1; yf--)
+                                            {
+                                                // Incoming!
+                                                int destBlock = tchunk.Blocks.GetID(xf, yf - 1, zf);
+
+                                                if (destBlock == 0 || fallThroughBlock.Contains(destBlock))
+                                                {
+                                                    continue;
+                                                }
+
+                                                // Smash weak blocks in the way
+                                                if (smashBlock.Contains(destBlock))
+                                                {
+                                                    tchunk.Blocks.SetID(xf, yf - 1, zf, 0);
+                                                    continue;
+                                                }
+
+                                                tchunk.Blocks.SetID(xf, yf, zf, 1);
+                                                break;
+                                            }
+                                        }
+                                    }
                                 }
                             }
 
-                            foreach (int i in fallBlock)
+                            for (int y = 1; y < ydim - 2; y++) // Manmade blocks displacement
                             {
-                                if (oldBlock == i)
-                                {
-                                    // Probability test
-                                    c = rand.NextDouble();
-                                    if (c < fallChanceMin + (fallChanceMax * perlinMulti))
-                                    {
-                                        int xtemp = x;
-                                        int ztemp = z;
+                                // Get the checked block's ID
+                                oldBlock = chunk.Blocks.GetID(x, y, z);
 
-                                        // Random chance to destroy the block in fall
-                                        c = rand.NextDouble();
-                                        if ((c < fallKillChanceMin + (fallKillChanceMin * perlinMulti)) && pass == 1)
+                                xp = x;
+                                yp = y;
+                                zp = z;
+
+                                // Try to look
+                                if (pass == 1)
+                                {
+                                    // Loop through all entries in the mutateBlock array
+                                    for (int i = 0; i < mutateBlock.GetUpperBound(0); i++)
+                                    {
+                                        if (oldBlock == 0)
                                         {
-                                            chunk.Blocks.SetID(x, y, z, 0);
                                             break;
                                         }
 
-                                        ChunkRef tchunk = chunk;
-
-                                        // If we push blocks sideways
-                                        if (pass <= sidewaysPassN)
+                                        // If the checked block is not the what we want, jump to the next mutateBlock entry
+                                        if (oldBlock != mutateBlock[i, 0])
                                         {
-                                            // Look if the block has empty space below it
-                                            int supportBlock = chunk.Blocks.GetID(x, y - 1, z);
+                                            continue;
+                                        }
 
-                                            if (supportBlock != 0)
+                                        // Have a random chance of letting the block live
+                                        float pMin = (mutateBlock[i, 2]) / 100f;
+                                        float pMax = (mutateBlock[i, 3]) / 100f;
+
+                                        c = rand.NextDouble();
+                                        if (c > pMin + (pMax * perlinMulti))
+                                        {
+                                            break;
+                                        }
+
+                                        chunk.Blocks.SetID(x, y, z, mutateBlock[i, 1]);
+                                        oldBlock = mutateBlock[i, 1];
+                                        break;
+                                    }
+                                }
+
+                                foreach (int i in fallBlock)
+                                {
+                                    if (oldBlock == i)
+                                    {
+                                        // Probability test
+                                        c = rand.NextDouble();
+                                        if (c < fallChanceMin + (fallChanceMax * perlinMulti))
+                                        {
+                                            int xtemp = x;
+                                            int ztemp = z;
+
+                                            // Random chance to destroy the block in fall
+                                            c = rand.NextDouble();
+                                            if ((c < fallKillChanceMin + (fallKillChanceMin * perlinMulti)) && pass == 1)
                                             {
-                                                c = rand.NextDouble();
-                                                if (c < sidewaysFallChanceMin + (sidewaysFallChanceMin * perlinMulti))
-                                                {
-                                                    //Try to move the block sideways
-                                                    airPos = FindFreeAir(chunk, chunkMan, x, y, z);
+                                                chunk.Blocks.SetID(x, y, z, 0);
+                                                break;
+                                            }
 
-                                                    if ((airPos[0] == -9999) && (airPos[1] == -9999))
+                                            ChunkRef tchunk = chunk;
+
+                                            // If we push blocks sideways
+                                            if (pass <= sidewaysPassN)
+                                            {
+                                                // Look if the block has empty space below it
+                                                int supportBlock = chunk.Blocks.GetID(x, y - 1, z);
+
+                                                if (supportBlock != 0)
+                                                {
+                                                    c = rand.NextDouble();
+                                                    if (c < sidewaysFallChanceMin + (sidewaysFallChanceMin * perlinMulti))
+                                                    {
+                                                        //Try to move the block sideways
+                                                        airPos = FindFreeAir(chunk, chunkMan, x, y, z);
+
+                                                        if ((airPos[0] == -9999) && (airPos[1] == -9999))
+                                                        {
+                                                            break;
+                                                        }
+
+                                                        xtemp = airPos[0];
+                                                        ztemp = airPos[1];
+
+                                                        if (((airPos[2] != chunk.X) || (airPos[3] != chunk.Z)) && ((airPos[2] != -999) && (airPos[3] != -999)))
+                                                        {
+                                                            tchunk = chunkMan.GetChunkRef(airPos[2], airPos[3]);
+                                                        }
+                                                    }
+                                                    else
                                                     {
                                                         break;
                                                     }
-
-                                                    xtemp = airPos[0];
-                                                    ztemp = airPos[1];
-
-                                                    if (((airPos[2] != chunk.X) || (airPos[3] != chunk.Z)) && ((airPos[2] != -999) && (airPos[3] != -999)))
-                                                    {
-                                                        tchunk = chunkMan.GetChunkRef(airPos[2], airPos[3]);
-                                                    }
                                                 }
-                                                else
+                                            }
+
+                                            int fallData = chunk.Blocks.GetData(x, y, z);
+                                            TileEntity fallTE = chunk.Blocks.GetTileEntity(x, y, z);
+
+                                            chunk.Blocks.SetID(x, y, z, 0);
+                                            tchunk.Blocks.ClearTileEntity(x, y, z);
+
+                                            for (int yf = y; yf > 1; yf--)
+                                            {
+                                                // It's raining blocks, halelujah, it's raining blocks...
+                                                int destBlock = tchunk.Blocks.GetID(xtemp, yf - 1, ztemp);
+
+                                                if (destBlock == 0 || fallThroughBlock.Contains(destBlock))
                                                 {
-                                                    break;
+                                                    continue;
                                                 }
+
+                                                // Smash weak blocks in the way
+                                                if (smashBlock.Contains(destBlock))
+                                                {
+                                                    tchunk.Blocks.SetID(xtemp, yf - 1, ztemp, 0);
+                                                    tchunk.Blocks.ClearTileEntity(xtemp, yf - 1, ztemp);
+                                                    continue;
+                                                }
+
+                                                tchunk.Blocks.SetID(xtemp, yf, ztemp, i);
+                                                tchunk.Blocks.SetData(xtemp, yf, ztemp, fallData);
+                                                if (fallTE != null && fallTE.ID != "Sign" && AcceptsTileEntities(i))
+                                                {
+                                                    tchunk.Blocks.SetTileEntity(xtemp, yf, ztemp, fallTE);
+                                                }
+
+                                                xp = xtemp;
+                                                yp = yf;
+                                                zp = ztemp;
+                                                break;
                                             }
-                                        }
-
-                                        int fallData = chunk.Blocks.GetData(x, y, z);
-                                        TileEntity fallTE = chunk.Blocks.GetTileEntity(x, y, z);
-
-                                        chunk.Blocks.SetID(x, y, z, 0);
-
-                                        for (int yf = y; yf > 1; yf--)
-                                        {
-                                            // It's raining blocks, halelujah, it's raining blocks...
-                                            int destBlock = tchunk.Blocks.GetID(xtemp, yf - 1, ztemp);
-
-                                            if (destBlock == 0 || fallThroughBlock.Contains(destBlock))
-                                            {
-                                                continue;
-                                            }
-
-                                            // Smash weak blocks in the way
-                                            if (smashBlock.Contains(destBlock))
-                                            {
-                                                tchunk.Blocks.SetID(xtemp, yf - 1, ztemp, 0);
-                                                continue;
-                                            }
-
-                                            tchunk.Blocks.SetID(xtemp, yf, ztemp, i);
-                                            tchunk.Blocks.SetData(xtemp, yf, ztemp, fallData);
-                                            if (fallTE != null && AcceptsTileEntities(i))
-                                                tchunk.Blocks.SetTileEntity(xtemp, yf, ztemp, fallTE);
-
-                                            xp = xtemp;
-                                            yp = yf;
-                                            zp = ztemp;
-                                            break;
                                         }
                                     }
                                 }
@@ -944,7 +975,7 @@ namespace TeethOfTime
         }
 
         // Function for cleaning clutter left by AgeChunk
-        public void CleanChunk(ChunkRef chunk, BetaChunkManager chunkMan, Bitmap perlinMask, int perlinResolution, int[] minXZ)
+        public void CleanChunk(ChunkRef chunk, RegionChunkManager chunkMan, Bitmap perlinMask, int perlinResolution, int[] minXZ)
         {
             int xdim = chunk.Blocks.XDim;
             int ydim = chunk.Blocks.YDim;
@@ -964,7 +995,12 @@ namespace TeethOfTime
             {
                 for (int z = 0; z < zdim; z++)
                 {
-                    Color perlinCol = perlinMask.GetPixel(Math.Abs(minXZ[0]) + (chunk.X * 16) + (x / perlinResolution), Math.Abs(minXZ[1]) + (chunk.Z * 16) + (z / perlinResolution));
+                    int px = Math.Abs(minXZ[0]) + (chunk.X * 16) + (x / perlinResolution);
+                    int py = Math.Abs(minXZ[1]) + (chunk.Z * 16) + (z / perlinResolution);
+                    px = Math.Min(Math.Max(px, 0), perlinMask.Width - 1);
+                    py = Math.Min(Math.Max(py, 0), perlinMask.Height - 1);
+
+                    Color perlinCol = perlinMask.GetPixel(px, py);
                     double perlinMulti = (double)perlinCol.R / 255f;
 
                     bool eroded = false;
@@ -1197,7 +1233,7 @@ namespace TeethOfTime
             }
         }
 
-        public int[] FindFreeAir(ChunkRef chunk, BetaChunkManager chunkMan, int x, int y, int z)
+        public int[] FindFreeAir(ChunkRef chunk, RegionChunkManager chunkMan, int x, int y, int z)
         {
             int cx = chunk.X;
             int cz = chunk.Z;
@@ -1262,7 +1298,7 @@ namespace TeethOfTime
             return position;
         }
 
-        public int[] FindFreeLight(ChunkRef chunk, BetaChunkManager chunkMan, int x, int y, int z)
+        public int[] FindFreeLight(ChunkRef chunk, RegionChunkManager chunkMan, int x, int y, int z)
         {
             int[] position = { -9999, -9999, -9999, -999, -999 };
 
@@ -1369,7 +1405,7 @@ namespace TeethOfTime
             return position;
         }
 
-        public int CheckAir(ChunkRef chunk, BetaChunkManager chunkMan, int x, int y, int z)
+        public int CheckAir(ChunkRef chunk, RegionChunkManager chunkMan, int x, int y, int z)
         {
             int cx = chunk.X;
             int cz = chunk.Z;

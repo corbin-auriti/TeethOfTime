@@ -9,3 +9,11 @@ E:\Minecraft\App Development\TeethOfTime\TeethFrontEnd\obj\x86\Release\TeethFron
 E:\Minecraft\App Development\TeethOfTime\TeethFrontEnd\obj\x86\Release\TeethFrontEnd.Main.resources
 E:\Minecraft\App Development\TeethOfTime\bin\Release\TeethFrontEnd.exe
 E:\Minecraft\App Development\TeethOfTime\bin\Release\TeethFrontEnd.pdb
+C:\Users\Skareeg\Documents\GitHubVisualStudio\TeethOfTime\TeethFrontEnd\obj\x86\Release\TeethFrontEnd.exe
+C:\Users\Skareeg\Documents\GitHubVisualStudio\TeethOfTime\TeethFrontEnd\obj\x86\Release\TeethFrontEnd.pdb
+C:\Users\Skareeg\Documents\GitHubVisualStudio\TeethOfTime\bin\Release\TeethFrontEnd.exe
+C:\Users\Skareeg\Documents\GitHubVisualStudio\TeethOfTime\bin\Release\TeethFrontEnd.pdb
+C:\Users\Skareeg\Documents\GitHubVisualStudio\TeethOfTime\TeethFrontEnd\obj\x86\Release\TeethFrontEnd.csprojResolveAssemblyReference.cache
+C:\Users\Skareeg\Documents\GitHubVisualStudio\TeethOfTime\TeethFrontEnd\obj\x86\Release\TeethFrontEnd.Main.resources
+C:\Users\Skareeg\Documents\GitHubVisualStudio\TeethOfTime\TeethFrontEnd\obj\x86\Release\TeethFrontEnd.Properties.Resources.resources
+C:\Users\Skareeg\Documents\GitHubVisualStudio\TeethOfTime\TeethFrontEnd\obj\x86\Release\TeethFrontEnd.csproj.GenerateResource.Cache

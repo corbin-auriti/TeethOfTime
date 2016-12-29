@@ -10,4 +10,7 @@
     <FallbackCulture>en-US</FallbackCulture>
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <StartArguments>"C:\Users\Skareeg\Desktop\MultiMC\instances\TNT\minecraft\saves\world" hard_quality.cfg</StartArguments>
+  </PropertyGroup>
 </Project>
